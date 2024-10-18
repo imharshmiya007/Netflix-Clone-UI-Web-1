@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #csv-output {
+            display: none; /* Hide the raw CSV output */
+        }
+
+        #scrollableContainer {
+            width: 100vw;          /* Full viewport width */
+            height: 100vh;         /* Full viewport height */
+            overflow-x: hidden;    /* Prevent horizontal scrolling */
+            overflow-y: auto;      /* Allow vertical scrolling */
+        }
+
+        #gridContainer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            column-gap: 30px;
+            row-gap: 80px;
+            width: 102vw; /* Adjust width dynamically based on viewport */
+            height: 100%; /* Make height flexible */
+            padding: 5vw;
+            box-sizing: border-box;
+        }
+
+        .screen {
+            position: relative;
+            border-radius: 10px;
+            /* display: flex; */
+            flex-direction: column;
+            height: 75%;
+            align-items: center;
+            justify-content: center;
+            font-size: 2vw;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 25px;
+            overflow: hidden;
+            transition: transform 0.3s ease; /* Smooth transition for resizing */
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .title {
+            margin: 5%;
+            font-size: 1.2vw;
+            text-align: justify;
+            color: #333;
+            max-height: 100%;
+            max-width: 90%; /* Limit the title width to prevent overflow */
+            white-space: hidden; /* Prevent the title from breaking into multiple lines */
+            overflow: hidden; /* Hide overflowing text */
+            text-overflow: ellipsis; /* Add "..." for long titles */
+        }
+
+        .navbar {
+            position: absolute;
+            z-index: 25;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8.8vh; /* Adjust navbar height based on viewport height */
+            background-color: rgba(255, 255, 255, 0);
+            display: flex;
+            justify-content: space-between;
+            padding: 0vw;
+            box-sizing: border-box;
+        }
+
+        .transparent-button {
+            background-color: rgba(0, 128, 0, 0.568);
+            color: white;
+            height: 100%;
+            width: 10vw; /* Use viewport width for button size */
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Other button styles for your navbar (transparent-button_1, transparent-button_2, etc.) go here */
+
+        .control-button {
+            position: absolute;
+            bottom: 5px;
+            right: 15px;
+            background-color: #f1f1f1;
+            color: #000000;
+            border: none;
+            padding: 5px 23px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 15;
+            transition: background 0.5s ease;
+        }
+
+        .play-overlay.hidden {
+            display: none;
+        }
+
+        /* Scale-up effect for videos on hover */
+        .video-container.scale-up {
+            transform: scale(1.1);
+        }
+        /* Button styles within the navbar */
+        .transparent-button_1 {
+            background-color: rgba(0, 128, 0, 0.568);
+            color: white;
+            display: inline-block;
+            height: 100%;
+            width: 3.6%;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .transparent-button_2 {
+            background-color: #4caf4f5d;
+            color: white;
+            height: 100%;
+            width: 80.8%;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .transparent-button_watch_latter {
+            background-color: rgba(0, 128, 0, 0.568);
+            color: white;
+            display: inline-block;
+            height: 100%;
+            width: 6%;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transparent-button_shere {
+            background-color: #4caf4f5d;
+            color: white;
+            height: 100%;
+            width: 3.5%;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transparent-button_in_fo {
+            background-color: #4caf4f58;
+            color: white;
+            height: 100%;
+            width: 4.5%;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 1200px) {
+            #gridContainer {
+                grid-template-columns: repeat(3, 1fr); /* Adjust columns for smaller screens */
+                grid-template-rows: repeat(3, 1fr);    /* Add more rows if needed */
+            }
+        }
+
+        @media (max-width: 768px) {
+            #gridContainer {
+                grid-template-columns: repeat(2, 1fr); /* Further adjust for smaller devices */
+                grid-template-rows: repeat(4, 1fr);
+                column-gap: 20px;
+                row-gap: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #gridContainer {
+                grid-template-columns: repeat(1, 1fr); /* Single column for very small devices */
+                grid-template-rows: repeat(8, 1fr);
+                column-gap: 10px;
+                row-gap: 30px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="csv-output"></div>
+<div id="scrollableContainer">
+    <div id="gridContainer"></div>
+</div>
+
+<script>
+    let videoIDs = []; // To store all video IDs and titles from the CSV file
+
+    function readCSVFile() {
+    fetch('youtube.csv')
+        .then(response => response.text())
+        .then(data => {
+            console.log('Raw CSV Data:', data); // Log the raw CSV data
+            // Process the CSV data
+            const lines = data.trim().split('\n');
+            lines.forEach((line, index) => {
+                if (index > 0 && line) {
+                    const values = line.split(',');
+                    console.log('Values:', values); // Log each line's values
+                    const videoID = values[0].trim();
+                    const videoTitle = values[1] ? values[1].trim() : 'Untitled';
+                    console.log('Video ID:', videoID, 'Title:', videoTitle); // Log the video ID and title
+                    if (videoID) {
+                        videoIDs.push({ id: videoID, title: videoTitle });
+                    }
+                }
+            });
+            console.log('Video Data:', videoIDs); // Log the final array of video data
+            createVideoGrid(); // Create the grid after reading CSV data
+        })
+        .catch(error => console.error('Error fetching the CSV file:', error));
+    }
+
+
+    // Function to create the video grid
+    function createVideoGrid() {
+        const gridContainer = document.getElementById('gridContainer');
+        videoIDs.forEach((video, index) => {
+            const screen = document.createElement('div');
+            screen.className = 'screen';
+            screen.innerHTML = `
+                <div class="video-container" id="videoContainer${index}">
+                    <nav class="navbar">
+                        <button class="transparent-button_1"></button>
+                        <button class="transparent-button_2"></button>
+                        <button class="transparent-button_watch_latter"></button>
+                        <button class="transparent-button_shere"></button>
+                        <button class="transparent-button_in_fo"></button>
+                    </nav>
+                    <iframe 
+                        id="videoPlayer${index}"
+                        src="https://www.youtube.com/embed/${video.id}?mute=1&controls=1&modestbranding=1&fs=0&rel=0"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                    <div class="play-overlay" id="playOverlay${index}" onclick="playVideo(${index})"></div>
+                    <button class="control-button" onclick="toggleFullScreen(${index})">⛶</button>
+                </div>
+                <div class="title">${video.title}</div> <!-- Insert the title here -->
+            `;
+            gridContainer.appendChild(screen);
+
+            const videoContainer = document.getElementById(`videoContainer${index}`);
+            videoContainer.addEventListener('mouseover', () => {
+                if (!document.fullscreenElement) { // Only scale and autoplay if not in full-screen
+                    scaleUpVideo(index);
+                    playVideo(index);
+                }
+            });
+            videoContainer.addEventListener('mouseleave', () => {
+                if (!document.fullscreenElement) { // Only scale down and pause if not in full-screen
+                    scaleDownVideo(index);
+                    pauseVideo(index);
+                }
+            });
+        });
+    }
+
+    // Function to handle video play
+    function playVideo(index) {
+        const iframe = document.getElementById(`videoPlayer${index}`);
+        const src = iframe.src.split('&autoplay=1')[0];
+        iframe.src = `${src}&autoplay=1`;
+        const playOverlay = document.getElementById(`playOverlay${index}`);
+        playOverlay.classList.add('hidden');
+    }
+
+    // Function to handle video pause
+    function pauseVideo(index) {
+        const iframe = document.getElementById(`videoPlayer${index}`);
+        const src = iframe.src.split('&autoplay=1')[0];
+        iframe.src = src;
+        const playOverlay = document.getElementById(`playOverlay${index}`);
+        playOverlay.classList.remove('hidden');
+    }
+
+    // Function to scale up video on hover
+    function scaleUpVideo(index) {
+        const videoContainer = document.getElementById(`videoContainer${index}`);
+        videoContainer.classList.add('scale-up');
+    }
+
+    // Function to scale down video when mouse leaves
+    function scaleDownVideo(index) {
+        const videoContainer = document.getElementById(`videoContainer${index}`);
+        videoContainer.classList.remove('scale-up');
+    }
+
+    // Call the function to read the CSV file when the page loads
+    window.onload = readCSVFile;
+
+    // Handle fullscreen changes
+    document.addEventListener('fullscreenchange', () => {
+        // If exiting full-screen, reset video states if needed
+        if (!document.fullscreenElement) {
+            videoIDs.forEach((_, index) => {
+                pauseVideo(index); // Pause video when exiting full-screen
+                scaleDownVideo(index); // Scale down when exiting full-screen
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

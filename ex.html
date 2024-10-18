@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Reader</title>
+</head>
+<body>
+    <div id="csv-output"></div>
+
+    <script>
+        // Function to fetch and read the CSV file
+        function readCSVFile() {
+            fetch('youtube.csv')
+                .then(response => response.text())
+                .then(data => {
+                    // Process the CSV data
+                    let allData = "";
+                    const lines = data.split('\n'); // Split rows
+                    lines.forEach(line => {
+                        allData += line + " "; // Add each line to the allData variable
+                    });
+                    console.log(allData)
+                    // Display the result in HTML
+                    document.getElementById("csv-output").innerText = allData;
+                })
+                .catch(error => console.error('Error fetching the CSV file:', error));
+        }
+
+        // Call the function to read the CSV file when the page loads
+        window.onload = readCSVFile;
+    </script>
+</body>
+</html>

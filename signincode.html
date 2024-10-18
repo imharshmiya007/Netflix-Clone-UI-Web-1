@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Harsh's Privet Netflix</title>
+        <link rel="icon" type="image/ico" href="Netflix Logo Icon.png">
+        <link rel="stylesheet" href="styles.css">
+    
+        <style>
+        
+            /*sign in box*/    
+
+            body
+            {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-image: url('netflix-india.webp');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+
+            .container 
+            {
+                width: 350px;
+                min-height: 680px;
+                margin: 35px auto;
+                padding: 45px 68px;
+                background-color: #040000ce;
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            }
+
+            h1 
+            {
+                text-align: left;
+                margin-bottom: 20px;
+                color: #fff;
+            }
+
+            label 
+            {
+                display: block;
+                margin-bottom: 5px;
+                color: #fff;
+            }
+
+            input[type="text"],
+            input[type="password"] 
+            {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                margin-bottom: 10px;
+                background-color: #465A7E66;
+                color: #fff;
+            }
+
+            button[type="submit"]
+            {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                font-weight: 400;
+                background-color: #e50914;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            button[type="signInCode"] 
+            {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                background-color: #403e3ea6;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .options 
+            {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+                color: #fff;
+                text-align: center;
+            }
+
+            .remember  
+            {
+                display: flex;
+                align-items: center;
+                margin-top: 80px;
+                color: #FFFFFF;
+            }
+
+            input[type="checkbox"]
+            {
+                margin-right: 12px;
+                text-align: center;
+                margin-top: -2px;
+                transform: scale(1.5);
+            }
+
+            p 
+            {
+                text-align: left;
+                margin-top: 20px;
+                color: #FFFFFFB3;
+
+            }
+
+            p a 
+            {
+                color: #FFFFFF;
+                text-decoration: none;
+            }
+
+            .paragraph1
+            {
+                text-align: center;
+                margin-top: 20px;
+                color: #FFFFFF;
+            }
+
+            .paragraph2
+            {
+                text-align: center;
+                margin-top: 20px;
+                color: #FFFFFFB3;
+            }
+
+            .captcha 
+            {
+                text-align: center;
+                text-align: left;
+                margin-top: 20px;
+                font-size: 14px;
+                color: #8c8c8c;
+            }
+            
+            #learnMoreBtn 
+            {
+                color: #0071eb;
+            }
+            
+            #Privacy
+            {
+                color: #0071eb;
+            }
+
+            #moreText 
+            {
+                display: none;
+                text-align: center;
+                text-align: left;
+                margin-top: 20px;
+                font-size: 14px;
+                color: #8c8c8c;
+            }
+
+          
+            /* bottom box */
+            
+            .bottom
+            {
+                width: 1383px;
+                min-height: 220px;
+                min-width: 600px;
+                margin: 0px auto;
+                margin-top: 50px;
+                padding: 45px 68px;
+                background-color: #040000ce;
+                border-radius: 4px;
+                border-top: none;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            #call
+            {
+                text-align: left;
+                margin-top: 30px;
+                font-size: 16px;
+                margin-left: 100px;
+                color: #FFFFFFB3;
+            }
+
+            #faq 
+            {
+                text-align: left;
+                margin-top: 40px;
+                color: #FFFFFFB3;
+            }
+
+            #help1 
+            {
+                text-align: left;
+                font-size: 14px;
+                margin-top: 10px;
+                margin-left: 83px;
+                display: inline-block;
+                padding: 10px 20px;
+                margin-right: 100px;
+                color: #FFFFFFB3;
+            }
+
+            #help2 
+            {
+                text-align: left;
+                font-size: 14px;
+                margin-top: 10px;
+                margin-left: 83px;
+                display: inline-block;
+                padding: 10px 20px;
+                margin-right: 4px;
+                color: #FFFFFFB3;
+            }
+
+                /* language option button */
+
+            #language-selector label 
+            {
+                display: flex;
+                cursor: pointer;
+                text-align: left;
+                font-size: 14px;
+                margin-top: 10px;
+                margin-left: 83px;
+                display: inline-block;
+                padding: 10px 20px;
+                margin-right: 4px;
+            }
+
+            #language-select 
+            {
+                padding-left: 20px; /* Adjust padding-left to accommodate image width */
+                font-size: 15px;
+                background-color: #121212ef;
+                color: rgb(229, 229, 229);
+            }
+
+            #lang-img 
+            {
+                position: absolute;
+                top: 50%;
+                left: 25px; /* Adjust as needed */
+                transform: translateY(-50%);
+                width: 14px; /* Adjust width as needed */
+                height: 12px;
+            }
+
+            #lang 
+            {
+                position: relative;
+                text-align: left;
+                margin-left: 83px;
+                margin-top: 16px;
+                padding: 6px 20px;
+            }
+            .Logonetflix img 
+            {
+                margin-top: 20px;
+                margin-left: 170px;
+                width: 10%;
+                height: 10%;
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="Logonetflix">
+            <img src="Logonetflix.png" alt="Example PNG Image">
+        </div>
+        
+        <div class="container">
+            <h1>Sign In</h1>
+            <form id="loginForm">
+                <label for="email">Email or phone number</label>
+                <input type="text" id="email" name="email" required>
+            </form>
+
+                <a href="resendcode.html"><button type="submit">Send Sign-in Code</button></a>
+                <p class="paragraph2">OR</p>
+
+                <a href="Netflix Login Page.html">
+                    <button type="signInCode">Use Password</button></a>
+                                    
+                <p class="paragraph1"><a role="link" id="options" data-uia="login-help-link" 
+                    href="https://www.netflix.com/in/LoginHelp">Forgot email or phone number ?</a></p>
+
+                
+                <div class="remember">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <p>New to Netflix? <a href="https://www.netflix.com" id="signUp">Sign up now.</a></p>
+            
+            
+            <div class="captcha">
+                This page is protected by Google reCAPTCHA to ensure you're not a bot.
+                <p id="moreText">The information collected by Google reCAPTCHA is subject to the Google 
+                    <a id="Privacy" href="https://policies.Google.com/privacy">Privacy Policy</a> and 
+                    <a id="Privacy" href="https://policies.Google.com/terms">Terms of Service</a>, 
+                    and is used for providing, maintaining, and improving the reCAPTCHA service and for 
+                    general security purposes 
+                    (it is not used for personalised advertising by Google).</p>
+                <a href="#" id="learnMoreBtn">Learn more</a>
+            </div>
+        </div>
+
+        
+        <div class="bottom">
+            <p id="call">Questions? Call <a id="faq" href="tel:+91 81 28 04 01 01">+91 81280 40101</p>
+            <a id="help1" href="https://help.netflix.com/support/412">FAQ</a>
+            <a id="help1" href="https://help.netflix.com">Help Center</a>
+            <a id="help1" href="https://help.netflix.com/legal/termsofuse">Terms Of Use</a>
+            <a id="help1" href="https://help.netflix.com/legal/privacy">Privacy</a>
+
+            <a id="help2" href="https://www.netflix.com/login?nextpage=https%3A%2F%2Fwww.netflix.com%2Fbrowse#">Cookie Preferences</a>
+            <a id="help2" href="https://help.netflix.com/legal/corpinfo">Corporate Information</a>
+
+            <p id="lang">
+                <img src="lang button.png" alt="Language Selector" id="lang-img" />
+                <select id="language-select">
+                    <option value="en" selected>English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="gu">ગુજરાતી</option>
+                </select>
+            </p>
+
+        </div>
+
+
+        <script src="scripts.js">
+
+            document.getElementById('loginForm').addEventListener('submit', function(event)
+            {
+                event.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (email.length === 0 || password.length === 0) 
+                {
+                    alert('Email Or Are pASSWORD aRE Required');
+
+                    document.getElementById('loginForm').addEventListener('submit'), function (event) 
+                    {
+                        event.preventDefault();
+
+                        const email = document.getElementById('email').value;
+                        const password = document.getElementById('password'). and ('password are required.');
+                        return;
+                    }
+
+                    //value;
+
+                    if (email.length === 0 || Performyourpassword.length === 0) 
+                    {
+                        alert('Email and password are required.');
+                        return;
+                    }
+        
+                }
+                // Perform form validation and submit the form using AJAX or Fetch API
+            }); 
+            login 
+            logic
+
+        </script>
+
+        <script>
+            document.getElementById("learnMoreBtn").addEventListener("click", function(event) 
+            {
+                event.preventDefault();
+                var moreText = document.getElementById("moreText");
+            
+                if (moreText.style.display === "none")
+                {
+                    moreText.style.display = "block";
+                    this.textContent = "Show less";
+                }
+                else 
+                {
+                    moreText.style.display = "none";
+                    this.textContent = "Learn more";
+                }
+            });
+        </script>
+
+   
+
+
+
+
+    
+    
+    </body>
+</html>

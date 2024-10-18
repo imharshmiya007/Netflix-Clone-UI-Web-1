@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Full-Screen Control</title>
+    <style>
+        /* Styling for the navbar */
+        .navbar {
+            position: absolute;
+            z-index: 25;
+            background-color: #ff00006b;
+            width: 100%;
+            height: 60px; /* Adjust the height here */
+        }
+
+        /* Button styles within the navbar */
+        .transparent-button_1 {
+            background-color: rgba(0, 128, 0, 0.568);
+            color: white;
+            display: inline-block;
+            height: 100%;
+            width: 3.7%;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .transparent-button_2 {
+            background-color: #4caf4f5d;
+            color: white;
+            height: 100%;
+            width: 80.9%;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .transparent-button_watch_latter {
+            background-color: rgba(0, 128, 0, 0.568);
+            color: white;
+            display: inline-block;
+            height: 100%;
+            width: 6%;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transparent-button_shere {
+            background-color: #4caf4f5d;
+            color: white;
+            height: 100%;
+            width: 4.2%;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transparent-button_in_fo {
+            background-color: #4caf4f58;
+            color: white;
+            height: 100%;
+            width: 3.6%;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Video container styles */
+        .video-container {
+            position: relative;
+            top: 50px;
+            left: 50px;
+            width: 560px;
+            height: 315px;
+            border-radius: 25px;
+            overflow: hidden;
+            transition: transform 0.3s ease; /* Smooth transition for resizing */
+        }
+
+        /* Iframe styling for embedded video */
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Adding scale effect on video hover */
+        .video-container.scale-up {
+            transform: scale(1.1); /* Increase size by 10% */
+        }
+
+        /* Style for full-screen toggle button */
+        .control-button {
+            position: absolute;
+            font-size: 22px;
+            bottom: 5px;
+            right: 15px;
+            color: #000000;
+            background-color: #f1f1f1;
+            border: none;
+            padding: 0px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        /* Initial play overlay styling */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1); /* Light initial overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 15;
+            transition: background 0.5s ease; /* Smooth transition for background */
+        }
+
+        /* Darker overlay when video is stopped */
+        .play-overlay.darker {
+            background: rgba(0, 0, 0, 0.5); /* Darker overlay when video stops */
+        }
+
+        /* Hidden play overlay */
+        .play-overlay.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Video container -->
+    <div class="video-container" id="videoContainer">
+        <nav class="navbar">
+            <!-- Transparent buttons inside navbar -->
+            <button class="transparent-button_1"></button>
+            <button class="transparent-button_2"></button>
+            <button class="transparent-button_watch_latter"></button>
+            <button class="transparent-button_shere"></button>
+            <button class="transparent-button_in_fo"></button>
+        </nav>
+
+        <!-- Embedded YouTube video iframe -->
+        <iframe 
+            id="videoPlayer"
+            src="https://www.youtube.com/embed/roz9sXFkTuE?mute=1&controls=1&modestbranding=0&fs=0&rel=0" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+
+        <!-- Play overlay div -->
+        <div class="play-overlay" id="playOverlay" onclick="playVideo()"></div>
+
+        <!-- Custom full-screen toggle button -->
+        <button class="control-button" id="toggleButton" onclick="toggleFullScreen()">⛶</button>
+    </div>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playOverlay = document.getElementById('playOverlay');
+        const videoContainer = document.getElementById('videoContainer');
+        let isFullScreen = false; // Track if the video is in full-screen mode
+
+        // Function to send commands to YouTube player via postMessage
+        function sendMessageToPlayer(command) {
+            const iframe = document.getElementById('videoPlayer');
+            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: command }), '*');
+        }
+
+        // Show play overlay and scale up the video on mouse over
+        videoContainer.addEventListener('mouseover', () => {
+            if (!isFullScreen) { // Only apply hover effect when not in full-screen
+                playOverlay.classList.remove('hidden');
+                playOverlay.classList.remove('darker');
+                videoContainer.classList.add('scale-up'); // Increase video size
+                // Ensure the video starts autoplaying
+                if (!videoPlayer.src.includes('autoplay=1')) {
+                    videoPlayer.src = videoPlayer.src.split('&autoplay=1')[0] + '&autoplay=1';
+                }
+            }
+        });
+
+        // Hide play overlay and stop the video on mouse out, only when not in full-screen
+        videoContainer.addEventListener('mouseleave', () => {
+            if (!isFullScreen) { // Only stop video and remove overlay in non-full-screen mode
+                playOverlay.classList.add('darker');
+                videoContainer.classList.remove('scale-up'); // Reset video size
+                if (videoPlayer.src.includes('autoplay=1')) {
+                    videoPlayer.src = videoPlayer.src.replace('&autoplay=1', '');
+                }
+            }
+        });
+
+        // Function to play video and hide play overlay
+        function playVideo() {
+            if (!videoPlayer.src.includes('autoplay=1')) {
+                videoPlayer.src = videoPlayer.src.split('&autoplay=1')[0] + '&autoplay=1';
+            }
+            playOverlay.classList.add('hidden'); // Hide the play overlay
+            playOverlay.classList.remove('darker'); // Remove the darker overlay
+            toggleFullScreen(); // Enable full-screen mode when the video is clicked
+        }
+
+        // Function to toggle full-screen mode
+        function toggleFullScreen() {
+            const button = document.getElementById('toggleButton');
+
+            if (document.fullscreenElement) { // If in full screen, exit full screen
+                document.exitFullscreen();
+                button.textContent = "⛶";
+                isFullScreen = false; // Update full-screen flag
+                sendMessageToPlayer('pauseVideo'); // Pause video when exiting full screen
+            } else {
+                videoContainer.requestFullscreen(); // Enter full-screen mode
+                button.textContent = "⛶";
+                isFullScreen = true; // Update full-screen flag
+            }
+        }
+
+        // Event listener to detect changes in full-screen mode
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) { // If full-screen mode is exited
+                isFullScreen = false;
+                const button = document.getElementById('toggleButton');
+                button.textContent = "⛶";
+                sendMessageToPlayer('pauseVideo'); // Pause video when exiting full screen
+            } else {
+                isFullScreen = true; // Full-screen mode is active
+            }
+        });
+    </script>
+</body>
+</html>
